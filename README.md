@@ -9,3 +9,4 @@ Dependencies:
 - scalatest 2.11-2.2.1
  
 I will create an sbt definition for these ASAP.
+This project is unfinished, no learning is added yet.
