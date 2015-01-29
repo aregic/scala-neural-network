@@ -1,0 +1,3 @@
+name := "Scala Neural Network"
+
+scalaVersion := "2.10.0"
