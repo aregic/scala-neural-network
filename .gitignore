@@ -1,1 +1,10 @@
 bin/
+target/
+project/target/
+
+#what is the point of this folder?!
+#sbt created it for some reason
+project/project/
+
+#ignoring temporary files created by gedit
+**~
