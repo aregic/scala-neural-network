@@ -38,4 +38,6 @@ extends INeuronConnection
 	    
 	def clearInput() : Unit =
 	    isValueReady = false
+	    
+    def setError( error : Double ) : Unit = {}
 }

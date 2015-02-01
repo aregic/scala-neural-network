@@ -10,7 +10,7 @@ class NoLearningFunc
 )
 extends IBackPropLearning with Extracted
 {
-	def learn( propagatedGradient 	: Double,
+	def learn( propagatedError 		: Double,
 			   weightSet			: WeightSet 
 		     ) : Double =
 	    return 1.0d

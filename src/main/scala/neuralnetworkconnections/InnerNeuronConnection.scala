@@ -3,10 +3,21 @@ package neuralnetworkconnections
 import neuralnetwork.Perceptron
 import scala.collection.mutable.Map
 
+object InnerNeuronConnection
+{
+    var id = 1
+    
+    def genId() : Int =
+    {
+        id += 1
+        return id
+    }
+}
+
 class InnerNeuronConnection
 (
-    var name				: String,
-    var inputPerceptron 	: Perceptron,
+    var name				: String = "InnerConnection" + InnerNeuronConnection.genId(),
+    var inputPerceptron 	: Perceptron = null,
     val outputPerceptrons	: Map[String, Perceptron]	
     		= Map[String, Perceptron]()
 )
@@ -42,4 +53,7 @@ extends INeuronConnection
 	    
 	def clearInput() : Unit =
 	    isValueReady = false
+	    
+    def setError( error : Double ) : Unit = 
+    	inputPerceptron.setError( error )
 }

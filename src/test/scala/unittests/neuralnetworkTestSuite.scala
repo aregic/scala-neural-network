@@ -1,33 +1,15 @@
 package unittests
 
-import org.scalatest.FunSuite
-import org.scalamock.scalatest.MockFactory
-import neuralnetwork.activationfunc.SigmoidActivationFunc
-import neuralnetwork.WeightSet
-import neuralnetwork.WeightSet
 import scala.collection.mutable.Map
-import neuralnetwork.WeightSet
-import neuralnetwork.learningfunctions.NoLearningFunc
+
+import org.scalamock.scalatest.MockFactory
+import org.scalatest.FunSuite
+
+import neuralnetwork.NeuralNetworkBuilder
 import neuralnetwork.Perceptron
 import neuralnetwork.activationfunc.LinearActivationFunc
-import neuralnetwork.exceptions.WrongIndexException
-import vectormath.NamedVector
-import vectormath.NamedVector
-import vectormath.NamedVector
-import neuralnetwork.NNOperators.sum
-import neuralnetwork.activationfunc.LinearActivationFunc
-import neuralnetwork.activationfunc.LinearActivationFunc
-import neuralnetwork.activationfunc.SigmoidActivationFunc
-import neuralnetwork.activationfunc.SigmoidActivationFunc
-import neuralnetwork.learningfunctions.GradientLearning
-import neuralnetwork.activationfunc.ActivationFunction
-import neuralnetwork.activationfunc.LinearActivationFunc
-import vectormath.vectornorms.EuclideanNorm
+import neuralnetwork.learningfunctions.NoLearningFunc
 import neuralnetworkconnections.InnerNeuronConnection
-import neuralnetworkconnections.CircleInNeuralNetwork
-import neuralnetworkconnections.InputConnection
-import neuralnetworkconnections.InnerNeuronConnection
-import neuralnetwork.NeuralNetworkBuilder
 import neuralnetworkconnections.InputConnection
 
 

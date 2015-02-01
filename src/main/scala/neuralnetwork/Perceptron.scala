@@ -75,6 +75,16 @@ class Perceptron
 		}
 	}
 	
+	def setError( error : Double ) : Unit =
+	{
+	    learningFunc.learn( error, weightSet )
+	    
+	    inputConnections.foreach( p => 
+	        p._2.setError( error )
+	    )
+	    
+	}
+	
 	private def collectInput() : Map[String,Double] =
 	{
 	    val inputMap = Map[String,Double]()

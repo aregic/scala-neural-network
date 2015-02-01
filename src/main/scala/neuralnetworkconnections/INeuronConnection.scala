@@ -13,4 +13,6 @@ trait INeuronConnection
 	def getInput() : Double
 	
 	def clearInput() : Unit
+	
+	def setError( error : Double ) : Unit
 }
