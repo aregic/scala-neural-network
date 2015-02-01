@@ -6,9 +6,11 @@ import neuralnetwork.activationfunc.LinearActivationFunc
 import neuralnetwork.learningfunctions.NoLearningFunc
 import neuralnetworkconnections.InnerNeuronConnection
 import neuralnetworkconnections.CircleInNeuralNetwork
+import org.scalamock.scalatest.MockFactory
 
 class TestsForNeuralNetworkConnection
 extends FunSuite
+with MockFactory
 {
     test("Test add input for InnerNeuronConnection") {
         val perceptron = new Perceptron( 
@@ -33,10 +35,10 @@ extends FunSuite
         
         val neuronConnection = new InnerNeuronConnection("1", perceptron)
         
-        neuronConnection.addOutput( perceptron2 )
+        neuronConnection.setOutput( perceptron2 )
         
-        expect(1) {
-            neuronConnection.outputPerceptrons.size
+        expect(perceptron2) {
+            neuronConnection.outputPerceptron
         }
     }
     
@@ -48,7 +50,7 @@ extends FunSuite
         val neuronConnection = new InnerNeuronConnection("1", perceptron)
         
         intercept[CircleInNeuralNetwork] {
-        	neuronConnection.addOutput( perceptron )
+        	neuronConnection.setOutput( perceptron )
         }
     }
     
@@ -100,6 +102,17 @@ extends FunSuite
         
         expect("1") {
             neuronConnection.getName() 
+        }
+    }
+    
+    test("Test getError for InnerNeuronConnection") {
+        val conn = new InnerNeuronConnection()
+        val mPerceptron = mock[Perceptron]
+        conn.setInput(mPerceptron)
+        (mPerceptron.setError _).expects(1.0d)
+        conn.setError(1.0d)
+        expect(1.0d) {
+            conn.getError()
         }
     }
 

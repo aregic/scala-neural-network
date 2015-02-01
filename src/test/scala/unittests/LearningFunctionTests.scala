@@ -77,18 +77,25 @@ with MockFactory
 	    outerPerceptron.setError(1.0d)	    
 	}
 	
-	test("Error backpropagation through 1 level") {
-	    val outerPerceptron = new Perceptron
-	    val innerConnection = new InnerNeuronConnection
-	    val mHiddenNeuron = mock[Perceptron]
+	test("Error backpropagation through 1 level - test error addition in hidden layer") {
+	    val outerPerceptron1 = new Perceptron
+	    val outerPerceptron2 = new Perceptron
+	    val innerConnection1= new InnerNeuronConnection
+	    val innerConnection2 = new InnerNeuronConnection
+	    val hiddenNeuron = new Perceptron
 	    
-	    (mHiddenNeuron.addOutput _).expects( innerConnection )
-	    NeuralNetworkBuilder.connect(mHiddenNeuron, outerPerceptron, innerConnection)
+	    NeuralNetworkBuilder.connect(hiddenNeuron, outerPerceptron1, innerConnection1)
+	    NeuralNetworkBuilder.connect(hiddenNeuron, outerPerceptron2, innerConnection2)
 	
 	    // Just a reminder: test spliting the error between
 	    // input connections!!!
 	    //(mHiddenNeuron.setError _).expects( 1.0d )
-	    outerPerceptron.setError(1.0d)	    
+	    outerPerceptron1.setError(1.0d)
+	    outerPerceptron2.setError(1.0d)
+	    
+	    expect(2.0d) {
+	        hiddenNeuron.getError()
+	    }
 	}
 	
 }

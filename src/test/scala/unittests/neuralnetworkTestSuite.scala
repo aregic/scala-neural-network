@@ -120,7 +120,7 @@ with	MockFactory
     test("propagate value") {
         val mPerc = mock[Perceptron]
         var inputConn = new InputConnection("1")        
-        inputConn.addOutput( mPerc )
+        inputConn.setOutput( mPerc )
         
         (mPerc.inputEvent _).expects()
         
@@ -133,9 +133,9 @@ with	MockFactory
         var inputConn = new InputConnection("1")  
         val innerConn = new InnerNeuronConnection("2", lvl1Perc)
 
-        inputConn.addOutput( lvl1Perc )
+        inputConn.setOutput( lvl1Perc )
         lvl1Perc.addOutput(innerConn)
-        innerConn.addOutput(mPerc)
+        innerConn.setOutput(mPerc)
         
         
         (mPerc.inputEvent _).expects()
@@ -205,10 +205,8 @@ with	MockFactory
         assert( lvl1Perc.isOutput(innerConn) )
         
         var found = false;
-        innerConn.outputPerceptrons.foreach( p =>
-            if ( p._2 == mPerc )
+        if ( innerConn.outputPerceptron == mPerc )
                 found = true
-        )
         
         assert( found )
     }

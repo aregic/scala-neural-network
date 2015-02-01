@@ -13,13 +13,13 @@ extends INeuronConnection
     var isValueReady 	: Boolean 	= false
     var value			: Double 	= 0.0d
         
-    val outputPerceptrons : Map[String, Perceptron] = Map()
+    var outputPerceptron : Perceptron = new Perceptron()
     
 	def setInput( perceptron : Perceptron ) : Unit =
 		throw new RuntimeException("InputConnection cannot have input perceptron")
 	
-	def addOutput( perceptron : Perceptron ) : Unit =
-	    outputPerceptrons( perceptron.name ) = perceptron
+	def setOutput( perceptron : Perceptron ) : Unit =
+	    outputPerceptron = perceptron
 	
 	def getName() : String = name
 	
@@ -29,9 +29,7 @@ extends INeuronConnection
 	    isValueReady = true
 	    
 	    if ( autoPropagation )
-	        outputPerceptrons.foreach( p => 
-	           p._2.inputEvent()
-	        )
+	        outputPerceptron.inputEvent()
 	}
     
     def getInput() : Double = value        
@@ -40,4 +38,7 @@ extends INeuronConnection
 	    isValueReady = false
 	    
     def setError( error : Double ) : Unit = {}
+    
+    //Error propagated to input connection is n.a.
+    def getError() : Double = 0.0d
 }

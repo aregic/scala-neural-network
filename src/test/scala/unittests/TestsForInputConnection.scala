@@ -23,13 +23,9 @@ extends FunSuite
                 new LinearActivationFunc(),
                 new NoLearningFunc() )
         
-        inputConnection.addOutput( perceptron )
+        inputConnection.setOutput( perceptron )
         
-        var found = false
-        inputConnection.outputPerceptrons.foreach( p => 
-            if( p._2 == perceptron ) found = true
-        )
-        assert(found)
+        assert( inputConnection.outputPerceptron == perceptron )
     }
     
     test("Add output neuron to InputConnection 2") {
@@ -38,11 +34,7 @@ extends FunSuite
                 new LinearActivationFunc(),
                 new NoLearningFunc() )
         
-        var found = false
-        inputConnection.outputPerceptrons.foreach( p => 
-            if( p._2 == perceptron ) found = true
-        )
-        assert( !found )
+        assert( inputConnection.outputPerceptron != perceptron )
     }
     
     test("Add input neuron for inputconnection") {

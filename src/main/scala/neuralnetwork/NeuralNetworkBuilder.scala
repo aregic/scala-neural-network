@@ -9,6 +9,6 @@ object NeuralNetworkBuilder
 	    perc1.addOutput(conn)
 	    perc2.addInput(conn)
 	    conn.setInput(perc1)
-	    conn.addOutput(perc2)
+	    conn.setOutput(perc2)
 	}
 }

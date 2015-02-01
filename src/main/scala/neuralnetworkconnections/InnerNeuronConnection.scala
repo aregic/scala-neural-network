@@ -18,22 +18,22 @@ class InnerNeuronConnection
 (
     var name				: String = "InnerConnection" + InnerNeuronConnection.genId(),
     var inputPerceptron 	: Perceptron = null,
-    val outputPerceptrons	: Map[String, Perceptron]	
-    		= Map[String, Perceptron]()
+    var outputPerceptron	: Perceptron = new Perceptron()
 )
 extends INeuronConnection
 {
     var value = 0.0d
     var isValueReady = false
+    var error = 0.0d
     
 	def setInput( perceptron : Perceptron ) : Unit =
 		inputPerceptron = perceptron
 			
-	def addOutput( perceptron : Perceptron ) : Unit =
+	def setOutput( perceptron : Perceptron ) : Unit =
 	{
 	    if ( inputPerceptron == perceptron )
 	        throw new CircleInNeuralNetwork("Input and output is the same in InnerNeuronConnection.")
-	    outputPerceptrons += ( perceptron.name -> perceptron )
+	    outputPerceptron = perceptron
 	}
 	
 	def getName() : String = name
@@ -43,9 +43,7 @@ extends INeuronConnection
 	    value = input
 	    isValueReady = true
 	    
-	    outputPerceptrons.foreach( p => 
-	        p._2.inputEvent()
-	    )
+	    outputPerceptron.inputEvent()
 	}
 	
 	def getInput() : Double =
@@ -55,5 +53,11 @@ extends INeuronConnection
 	    isValueReady = false
 	    
     def setError( error : Double ) : Unit = 
+    {
+	    this.error = error
     	inputPerceptron.setError( error )
+    }
+	
+	def getError() : Double =
+	    error
 }

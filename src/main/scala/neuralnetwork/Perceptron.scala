@@ -7,6 +7,7 @@ import neuralnetwork.learningfunctions.IBackPropLearning
 import neuralnetwork.NNOperators.sum
 import scala.collection.mutable.Map
 import neuralnetworkconnections.INeuronConnection
+import neuralnetwork.sumstrategies.SumStrategy
 
 object Perceptron
 {
@@ -18,6 +19,7 @@ class Perceptron
     var activationFunc		: ActivationFunction	= new SigmoidActivationFunc(), 
 	var learningFunc 		: IBackPropLearning		= new NoLearningFunc(), 
 	var weightSet			: WeightSet				= new WeightSet(),
+	var errorSumStrategy	: IErrorSumStrategy		= SumStrategy,
     val outputConnections	: Map[String, INeuronConnection] = Map(),
     val inputConnections	: Map[String, INeuronConnection] = Map(),
     var name				: String				= ""
@@ -25,6 +27,7 @@ class Perceptron
 {
     var result 			: Double	= 0.0d
     var isValueReady	: Boolean	= false
+    //var errorVector		: Map[INeuronConnection,Double]
     
     if ( name == "" )
         name = genId()
@@ -84,6 +87,10 @@ class Perceptron
 	    )
 	    
 	}
+	
+	def getError() : Double =
+		errorSumStrategy.getSum(outputConnections)
+	    
 	
 	private def collectInput() : Map[String,Double] =
 	{
