@@ -15,29 +15,29 @@ import neuralnetwork.WeightSet
 import neuralnetworkconnections.InnerNeuronConnection
 import neuralnetwork.NeuralNetworkBuilder
 import neuralnetworkconnections.InnerNeuronConnection
+import neuralnetworkconnections.InputConnection
+import scala.collection.mutable.Map
 
 class LearningFunctionTests 
 extends FunSuite
 with MockFactory
 {
-    test("NoLearningFunc constructor") {
-        val noLearningFunc = new NoLearningFunc()
-    }
-    
-    test("NoLearningFunc learn function") {
-        val noLearningFunc = new NoLearningFunc()
-        val weightSet = new WeightSet()
-        val actFunc = new LinearActivationFunc()
-        noLearningFunc.learn( 0.0d, weightSet )
-    }
-    
-	test("BackPropagation learning - error decrease test") {
+	ignore("BackPropagation learning - error decrease test") {
 		val sigmoidActivationFunc = new SigmoidActivationFunc()
 	    val gradBackPropLearning = new GradientLearning(sigmoidActivationFunc)
-	    val weightSet = new WeightSet() 
-		EuclideanNorm.normalize( weightSet )
+		val inputMap = Map( ("1"->1.0d), ("2"->2.0d) )
+	    val weightSet = new WeightSet(inputMap) 
 		
+		val perceptron = new Perceptron( 
+	        learningFunc = gradBackPropLearning,
+	        activationFunc = sigmoidActivationFunc,
+	        weightSet = weightSet )
 		
+		val inputConnection = new InnerNeuronConnection()
+		val outputConnection = new InnerNeuronConnection()
+		
+		NeuralNetworkBuilder.connect(inputConnection, perceptron)
+		NeuralNetworkBuilder.connect(perceptron, outputConnection)
 	}
 	
 	test("Error beckpropagation - calling the learn function") {
@@ -45,53 +45,65 @@ with MockFactory
 	    val weightSet = new WeightSet()
 	    val perceptron = new Perceptron( 
 	            learningFunc = mLearningFunc, 
-	            weightSet = weightSet
+	            weightSet = weightSet,
+	            name = "1"
 	    )
+	    val outputConn = new InnerNeuronConnection()
 	    
-	    (mLearningFunc.learn _).expects(1.0, weightSet)
+	    perceptron.addOutput(outputConn)
+	    outputConn.setInput(perceptron)
 	    
-	    perceptron.setError(1.0d)
+	    (mLearningFunc.learn _).expects( 1.0, weightSet, scala.collection.immutable.Map[String,Double]() )
+	    
+	    outputConn.setError(1.0d)
 	}
 	
 	test("Error backpropagation to InnerConnection") {
 	    val outerPerceptron = new Perceptron()
 	    val innerConnection = mock[InnerNeuronConnection]
+	    val outputConnection = new InnerNeuronConnection()
 	    
 	    (innerConnection.getName _).expects().returning("some name") anyNumberOfTimes()
 	    outerPerceptron.addInput( innerConnection )
 	    
+	    NeuralNetworkBuilder.connect(outerPerceptron, outputConnection)
+	    
         (innerConnection.setError _).expects(1.0d)
+        (innerConnection.getInput _).expects().returning(1.0d)
         
-        outerPerceptron.setError(1.0d)
+        outputConnection.setError(1.0d)
 	}
 	
 	test("Error backpropagation through 1 level") {
 	    val outerPerceptron = new Perceptron
 	    val innerConnection = new InnerNeuronConnection
+	    val outputConnection = new InnerNeuronConnection
 	    val mHiddenNeuron = mock[Perceptron]
 	    
 	    (mHiddenNeuron.addOutput _).expects( innerConnection )
 	    NeuralNetworkBuilder.connect(mHiddenNeuron, outerPerceptron, innerConnection)
+	    NeuralNetworkBuilder.connect(outerPerceptron, outputConnection)
 	    
-	    (mHiddenNeuron.setError _).expects( 1.0d )
-	    outerPerceptron.setError(1.0d)	    
+	    (mHiddenNeuron.errorEvent _).expects()
+	    outputConnection.setError(1.0d)	    
 	}
 	
 	test("Error backpropagation through 1 level - test error addition in hidden layer") {
 	    val outerPerceptron1 = new Perceptron
 	    val outerPerceptron2 = new Perceptron
+	    val outputConnection1= new InnerNeuronConnection
+	    val outputConnection2 = new InnerNeuronConnection
 	    val innerConnection1= new InnerNeuronConnection
 	    val innerConnection2 = new InnerNeuronConnection
 	    val hiddenNeuron = new Perceptron
 	    
 	    NeuralNetworkBuilder.connect(hiddenNeuron, outerPerceptron1, innerConnection1)
 	    NeuralNetworkBuilder.connect(hiddenNeuron, outerPerceptron2, innerConnection2)
+	    NeuralNetworkBuilder.connect(outerPerceptron1, outputConnection1)
+	    NeuralNetworkBuilder.connect(outerPerceptron2, outputConnection2)
 	
-	    // Just a reminder: test spliting the error between
-	    // input connections!!!
-	    //(mHiddenNeuron.setError _).expects( 1.0d )
-	    outerPerceptron1.setError(1.0d)
-	    outerPerceptron2.setError(1.0d)
+	    outputConnection1.setError(1.0d)
+	    outputConnection2.setError(1.0d)
 	    
 	    expect(2.0d) {
 	        hiddenNeuron.getError()

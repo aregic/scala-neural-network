@@ -1,0 +1,6 @@
+package neuralnetworkconnections
+
+class OutputConnection
+{
+
+}

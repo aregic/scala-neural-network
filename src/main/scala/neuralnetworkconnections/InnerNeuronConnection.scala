@@ -14,17 +14,20 @@ object InnerNeuronConnection
     }
 }
 
+// TODO replace the null in the default value?
+// 		Reason: mocking needs a default constructor
 class InnerNeuronConnection
 (
-    var name				: String = "InnerConnection" + InnerNeuronConnection.genId(),
-    var inputPerceptron 	: Perceptron = null,
-    var outputPerceptron	: Perceptron = new Perceptron()
+    var name				: String 		= "InnerConnection" + InnerNeuronConnection.genId(),
+    var inputPerceptron 	: Perceptron 	= null,
+    var outputPerceptron	: Perceptron 	= new Perceptron()
 )
 extends INeuronConnection
 {
     var value = 0.0d
     var isValueReady = false
     var error = 0.0d
+    var isErrorReady = false
     
 	def setInput( perceptron : Perceptron ) : Unit =
 		inputPerceptron = perceptron
@@ -42,7 +45,6 @@ extends INeuronConnection
 	{
 	    value = input
 	    isValueReady = true
-	    
 	    outputPerceptron.inputEvent()
 	}
 	
@@ -55,7 +57,8 @@ extends INeuronConnection
     def setError( error : Double ) : Unit = 
     {
 	    this.error = error
-    	inputPerceptron.setError( error )
+	    isErrorReady = true
+    	inputPerceptron.errorEvent()
     }
 	
 	def getError() : Double =

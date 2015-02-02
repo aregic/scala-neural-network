@@ -12,6 +12,12 @@ import neuralnetwork.sumstrategies.SumStrategy
 object Perceptron
 {
     var id = 0
+    
+	private def genId() : String =
+	{
+	    id += 1
+	    return "Perceptron" + id
+	}
 }
 
 class Perceptron
@@ -22,18 +28,19 @@ class Perceptron
 	var errorSumStrategy	: IErrorSumStrategy		= SumStrategy,
     val outputConnections	: Map[String, INeuronConnection] = Map(),
     val inputConnections	: Map[String, INeuronConnection] = Map(),
-    var name				: String				= ""
+    var name				: String				= Perceptron.genId()
 )
 {
     var result 			: Double	= 0.0d
     var isValueReady	: Boolean	= false
+    var lastValue		: scala.collection.immutable.Map[String,Double] = 
+        scala.collection.immutable.Map()
     //var errorVector		: Map[INeuronConnection,Double]
     
-    if ( name == "" )
-        name = genId()
-        
 	def apply( x : Map[String,Double] ) : Double =
+	{
 	    return activationFunc( sum(weightSet(x)) )
+	}
 	
 	def addInput( conn : INeuronConnection, weight : Double ) : Unit =
 	{
@@ -48,7 +55,7 @@ class Perceptron
         outputConnections(connection.getName) = connection
 	    
 	def learn( propagatedGradient : Double ) : Unit =
-	    learningFunc.learn( propagatedGradient, weightSet )
+	    learningFunc.learn( propagatedGradient, weightSet, lastValue )
 	    
     def isOutput( neuronConn : INeuronConnection ) : Boolean =
     {
@@ -61,8 +68,20 @@ class Perceptron
 
 	def isInputReady() : Boolean = 
 	{
+	    if ( inputConnections.isEmpty )
+	        return false
+	        
 	    inputConnections.foreach( p => 
 	        if ( ! p._2.isValueReady )
+	            return false
+	    )
+	    return true
+	}
+	
+	def isErrorReady() : Boolean = 
+	{
+	    outputConnections.foreach( p => 
+	        if ( ! p._2.isErrorReady )
 	            return false
 	    )
 	    return true
@@ -78,19 +97,22 @@ class Perceptron
 		}
 	}
 	
-	def setError( error : Double ) : Unit =
+	def errorEvent() : Unit =
 	{
-	    learningFunc.learn( error, weightSet )
-	    
-	    inputConnections.foreach( p => 
-	        p._2.setError( error )
-	    )
-	    
+	    if ( isErrorReady ) 
+	    {
+		    learningFunc.learn( getError(), weightSet, collectInput().toMap )
+		    
+		    inputConnections.foreach( p => 
+		        p._2.setError( getError() )
+		    )
+	    }
 	}
 	
 	def getError() : Double =
 		errorSumStrategy.getSum(outputConnections)
 	    
+	
 	
 	private def collectInput() : Map[String,Double] =
 	{
@@ -101,11 +123,5 @@ class Perceptron
 	    )
 	    
 	    return inputMap
-	}
-	
-	private def genId() : String =
-	{
-	    Perceptron.id += 1
-	    return "Perceptron" + Perceptron.id
 	}
 }

@@ -1,5 +1,0 @@
-package unittests
-
-class TestsForErrorVector {
-
-}

@@ -24,7 +24,7 @@ extends NamedVector ( map )
 	                
 
     // Sum_i(a_i*x_i)
-    def getSum( x : Map[String,Double] ) : Double = 
+    def getSum( x : scala.collection.immutable.Map[String,Double] ) : Double = 
     {
 	    x.foreach( p => {
 	        val tmp	= get( p._1 )
@@ -37,6 +37,15 @@ extends NamedVector ( map )
 		map.foreach( p => sum+= ( p._2 * x(p._1) ) )
 		return sum
 	}
+    
+    def getSum( x : scala.collection.mutable.Map[String,Double] ) : Double =
+        getSum(x.toMap)
+    
+    def *( x : scala.collection.immutable.Map[String,Double] ) : Double =
+        getSum(x)
+        
+    def *( x : scala.collection.mutable.Map[String,Double] ) : Double =
+        getSum(x.toMap)
     
     // Normalize by newtonian norm ( = quadratic norm )
     def normByEucledian() : Unit =

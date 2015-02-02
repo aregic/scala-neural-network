@@ -2,7 +2,7 @@ package neuralnetworkconnections
 
 import neuralnetwork.Perceptron
 
-trait INeuronConnection 
+abstract class INeuronConnection 
 {
 	def setInput( perceptron : Perceptron ) : Unit
 	def setOutput( perceptron : Perceptron ) : Unit
@@ -16,4 +16,5 @@ trait INeuronConnection
 	
 	def setError( error : Double ) : Unit
 	def getError() : Double
+	def isErrorReady() : Boolean 
 }

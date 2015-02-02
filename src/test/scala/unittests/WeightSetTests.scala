@@ -50,7 +50,7 @@ extends FunSuite
 		val weightSet = new WeightSet( Map( "1" -> 2, "2" -> 2, "3" -> 2 ) )
 	    
 	    intercept[NoSuchElementException] {
-	        weightSet.getSum( Map( "1" -> 1, "2" -> 1, "4" -> 1) )
+	        weightSet.getSum( Map( "1" -> 1.0d, "2" -> 1.0d, "4" -> 1.0d) )
 	    }	    
 	}
 	
@@ -58,7 +58,7 @@ extends FunSuite
 	    val weightSet = new WeightSet( Map( "1" -> 2, "2" -> 2, "3" -> 2 ) )
 	    
 	    expect( 6.0 ) {
-	        weightSet.getSum( Map( "1" -> 1, "2" -> 1, "3" -> 1) )
+	        weightSet.getSum( Map( "1" -> 1.0d, "2" -> 1.0d, "3" -> 1.0d) )
 	    }
 	}
 	
@@ -66,7 +66,15 @@ extends FunSuite
 	    val weightSet = new WeightSet( Map( "1" -> 2, "2" -> 2, "3" -> 2 ) )
 	    
 	    expect( 8.0 ) {
-	        weightSet.getSum( Map( "1" -> 1, "2" -> 2, "3" -> 1) )
+	        weightSet.getSum( Map( "1" -> 1.0d, "2" -> 2.0d, "3" -> 1.0d) )
+	    }
+	}
+	
+	test("Operator *") {
+	    val weightSet = new WeightSet( Map( "1" -> 2, "2" -> 2, "3" -> 2 ) )
+	    
+	    expect( 6.0 ) {
+	        weightSet * Map( "1" -> 1.0d, "2" -> 1.0d, "3" -> 1.0d)
 	    }
 	}
 	

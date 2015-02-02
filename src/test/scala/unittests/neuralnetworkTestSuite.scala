@@ -1,17 +1,17 @@
 package unittests
 
 import scala.collection.mutable.Map
-
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.FunSuite
-
 import neuralnetwork.NeuralNetworkBuilder
 import neuralnetwork.Perceptron
 import neuralnetwork.activationfunc.LinearActivationFunc
 import neuralnetwork.learningfunctions.NoLearningFunc
 import neuralnetworkconnections.InnerNeuronConnection
 import neuralnetworkconnections.InputConnection
-
+import neuralnetworkconnections.INeuronConnection
+import NeuralNetworkBuilder._
+import scala.actors.InputChannel
 
 class NeuralNetworkTests
 extends FunSuite
@@ -110,6 +110,7 @@ with	MockFactory
                 new NoLearningFunc() )
         var inputConn = new InputConnection("1")
         
+        neuralNetwork.addInput(inputConn)
         inputConn.setInput(1)
         
         expect(true) {
@@ -134,6 +135,7 @@ with	MockFactory
         val innerConn = new InnerNeuronConnection("2", lvl1Perc)
 
         inputConn.setOutput( lvl1Perc )
+        lvl1Perc.addInput(inputConn)
         lvl1Perc.addOutput(innerConn)
         innerConn.setOutput(mPerc)
         
@@ -211,20 +213,57 @@ with	MockFactory
         assert( found )
     }
     
-    /*
-    test("propagate value throught 2 levels - test 1") {
+    test("Connect neuron to neuron connection") {
+        val mPerceptron = mock[Perceptron]
+        val outputConnection = new InnerNeuronConnection()
+        
+        (mPerceptron.addOutput _).expects(outputConnection)
+        NeuralNetworkBuilder.connect(mPerceptron, outputConnection)
+    }
+    
+    test("Connect neuron to neuron connection 2") {
+        val perceptron = new Perceptron()
+        val mOutputConnection = mock[InnerNeuronConnection]
+        
+        (mOutputConnection.setInput(_:Perceptron)).expects(perceptron)
+        (mOutputConnection.getName _).expects().returning("1")
+        NeuralNetworkBuilder.connect(perceptron, mOutputConnection)
+    }
+    
+    test("Connect neuron connection to neuron") {
+        val mInputConnection = mock[InnerNeuronConnection]
+        val perceptron = new Perceptron()
+        
+        (mInputConnection.setOutput _).expects(perceptron)
+        (mInputConnection.getName _).expects().returning("1") anyNumberOfTimes()
+        NeuralNetworkBuilder.connect(mInputConnection, perceptron)
+    }
+    
+    test("Connect neuron connection to neuron 2") {
+        val inputConnection = new InnerNeuronConnection()
+        val mPerceptron = mock[Perceptron]
+        
+        (mPerceptron.addInput(_:INeuronConnection)).expects(inputConnection)
+        NeuralNetworkBuilder.connect(inputConnection, mPerceptron)
+    }
+    
+    
+    test("propagate value throught 2 levels - test 2") {
         val lvl1Perc = new Perceptron()
-        val innerConn = mock[InnerNeuronConnection(lvl1Perc)]
-        var inputConn = new InputConnection("1")  
+        val mOutputPerc = mock[Perceptron]
+        val innerConn = new InnerNeuronConnection()
+        val inputConn = new InputConnection("1")  
+        val outputConn = new InputConnection("2")
 
-        inputConn.addOutput("conn1", lvl1Perc)
+        NeuralNetworkBuilder.connect(inputConn, lvl1Perc)
         
+        (mOutputPerc.addInput(_:INeuronConnection)).expects(innerConn)
+        NeuralNetworkBuilder.connect(lvl1Perc, mOutputPerc, innerConn)
         
-        (inputConn.setInput(_:Double)).expects(1.0d)
+        (mOutputPerc.inputEvent _).expects()
         
         inputConn.setInput(5.0d)
     }
-    */
     
     /*
     test("Test neural network forward propagation") {

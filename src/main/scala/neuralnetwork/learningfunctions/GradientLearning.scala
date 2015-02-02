@@ -2,6 +2,7 @@ package neuralnetwork.learningfunctions
 
 import neuralnetwork.activationfunc.ActivationFunction
 import neuralnetwork.WeightSet
+import vectormath.NamedVector
 
 class GradientLearning 
 (
@@ -10,10 +11,13 @@ class GradientLearning
 )
 extends IBackPropLearning
 {
-	def learn( propagatedGradient 	: Double,
-			   weightSet			: WeightSet 
+    val derivativeOfActivationFunc = activationFunction.getDerivative()
+    
+	def learn( propagatedError	 	: Double,
+			   weightSet			: WeightSet,
+			   inputVector			: Map[String,Double]
          ) : Double =
 	{
-	    return 1.0d
+	    return propagatedError * derivativeOfActivationFunc( weightSet*inputVector )
 	}
 }

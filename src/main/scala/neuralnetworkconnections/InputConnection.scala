@@ -12,7 +12,8 @@ extends INeuronConnection
 {
     var isValueReady 	: Boolean 	= false
     var value			: Double 	= 0.0d
-        
+    var isErrorReady	: Boolean	= false
+    
     var outputPerceptron : Perceptron = new Perceptron()
     
 	def setInput( perceptron : Perceptron ) : Unit =

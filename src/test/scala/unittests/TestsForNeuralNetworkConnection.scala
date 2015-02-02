@@ -109,7 +109,7 @@ with MockFactory
         val conn = new InnerNeuronConnection()
         val mPerceptron = mock[Perceptron]
         conn.setInput(mPerceptron)
-        (mPerceptron.setError _).expects(1.0d)
+        (mPerceptron.errorEvent _).expects()
         conn.setError(1.0d)
         expect(1.0d) {
             conn.getError()
