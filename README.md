@@ -16,4 +16,6 @@ sbt compile
 Run unittests:
 sbt test
 
-This project is unfinished, no learning is added yet.
+This project is unfinished.
+
+Learning is now added (classic backpropagation), but it is not tested yet (other then unit tests, but those aren't really good for testing learning algorithms), so expect it not to work at the moment.
