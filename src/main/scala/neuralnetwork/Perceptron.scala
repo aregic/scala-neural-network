@@ -33,8 +33,8 @@ class Perceptron
 {
     var result 			: Double	= 0.0d
     var isValueReady	: Boolean	= false
-    var lastValue		: scala.collection.immutable.Map[String,Double] = 
-        scala.collection.immutable.Map()
+    var lastValue		: scala.collection.mutable.Map[String,Double] = 
+        scala.collection.mutable.Map()
     //var errorVector		: Map[INeuronConnection,Double]
     
 	def apply( x : Map[String,Double] ) : Double =
@@ -55,7 +55,7 @@ class Perceptron
         outputConnections(connection.getName) = connection
 	    
 	def learn( propagatedGradient : Double ) : Unit =
-	    learningFunc.learn( propagatedGradient, weightSet, lastValue )
+	    learningFunc.learn( propagatedGradient, weightSet, lastValue.toMap )
 	    
     def isOutput( neuronConn : INeuronConnection ) : Boolean =
     {
@@ -110,7 +110,8 @@ class Perceptron
 	}
 	
 	def getError() : Double =
-		errorSumStrategy.getSum(outputConnections)
+		errorSumStrategy.getSum(outputConnections) * 
+		activationFunc.getDerivative()(sum(lastValue))
 	    
 	
 	

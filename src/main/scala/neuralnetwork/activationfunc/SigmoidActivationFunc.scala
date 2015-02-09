@@ -12,7 +12,7 @@ extends ActivationFunction
 	def apply( x : Double ) : Double = 
 	{
 		return 				1 /
-			   ( 1 + math.exp( middle - angle*x ) )
+			   ( 1 + math.exp( -angle*(x-middle) ) )
 	}
 	
 	def getDerivative() : ActivationFunction =

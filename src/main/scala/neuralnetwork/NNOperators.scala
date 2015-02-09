@@ -10,4 +10,6 @@ object NNOperators
 	    return sum
 	}
 	
+	def sum( x : scala.collection.immutable.Map[String,Double] ) : Double = 
+		sum(x.toMap)
 }

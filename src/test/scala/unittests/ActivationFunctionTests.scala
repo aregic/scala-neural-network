@@ -26,7 +26,13 @@ extends FunSuite
 	test("SigmoidActivationFunc with different angle") {
 	    var sigmoidActFunc = new SigmoidActivationFunc(2, 2);
 	    
-	    assert ( math.abs(sigmoidActFunc.apply( 2 ) - 0.88079707797) < 0.0001 )
+	    assert ( math.abs(sigmoidActFunc.apply( 2 ) - 0.5) < 0.0001 )
+	}
+	
+	test("SigmoidActivationFunc with different angle - 2") {
+	    var sigmoidActFunc = new SigmoidActivationFunc(2, 2);
+	    
+	    assert ( sigmoidActFunc.apply( 3 ) > 0.5 )
 	}
 	
 	test("Derivative of linear function") {

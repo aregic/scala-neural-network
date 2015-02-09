@@ -3,6 +3,8 @@ package neuralnetwork.learningfunctions
 import neuralnetwork.activationfunc.ActivationFunction
 import neuralnetwork.WeightSet
 import vectormath.NamedVector
+//import scala.collection.mutable.Map
+import neuralnetwork.NNOperators.sum
 
 class GradientLearning 
 (
@@ -18,6 +20,11 @@ extends IBackPropLearning
 			   inputVector			: Map[String,Double]
          ) : Double =
 	{
-	    return propagatedError * derivativeOfActivationFunc( weightSet*inputVector )
+        val temp = propagatedError * derivativeOfActivationFunc( sum(inputVector) )
+	    for ( weightTuple <- weightSet ) {
+	        weightSet(weightTuple._1) -= weightTuple._2 * temp
+	    }
+	    
+	    return 0.0d
 	}
 }

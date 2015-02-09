@@ -17,6 +17,9 @@ import neuralnetwork.NeuralNetworkBuilder
 import neuralnetworkconnections.InnerNeuronConnection
 import neuralnetworkconnections.InputConnection
 import scala.collection.mutable.Map
+import neuralnetwork.learningfunctions.GradientLearning
+import neuralnetwork.activationfunc.SigmoidActivationFunc
+import neuralnetworkconnections.InputConnection
 
 class LearningFunctionTests 
 extends FunSuite
@@ -53,7 +56,7 @@ with MockFactory
 	    perceptron.addOutput(outputConn)
 	    outputConn.setInput(perceptron)
 	    
-	    (mLearningFunc.learn _).expects( 1.0, weightSet, scala.collection.immutable.Map[String,Double]() )
+	    (mLearningFunc.learn _).expects( 0.25, weightSet, scala.collection.immutable.Map[String,Double]() )
 	    
 	    outputConn.setError(1.0d)
 	}
@@ -68,7 +71,7 @@ with MockFactory
 	    
 	    NeuralNetworkBuilder.connect(outerPerceptron, outputConnection)
 	    
-        (innerConnection.setError _).expects(1.0d)
+        (innerConnection.setError _).expects(0.25d)
         (innerConnection.getInput _).expects().returning(1.0d)
         
         outputConnection.setError(1.0d)
@@ -105,9 +108,30 @@ with MockFactory
 	    outputConnection1.setError(1.0d)
 	    outputConnection2.setError(1.0d)
 	    
-	    expect(2.0d) {
+	    expect(0.125d) {
 	        hiddenNeuron.getError()
 	    }
 	}
+	
+	test("Test one backpropagation iteration") {
+	    val sigmoidFunc = new SigmoidActivationFunc( middle = 1.0d )
+	    val perceptron = new Perceptron( 
+            learningFunc = new GradientLearning(sigmoidFunc,1.0d) 
+        )
+	    val outputConnection= new InnerNeuronConnection
+	    val inputConnection = new InputConnection( name = "1" )
+	    
+	    NeuralNetworkBuilder.connect(perceptron, outputConnection)
+	    NeuralNetworkBuilder.connect(inputConnection, perceptron)
+	
+	    inputConnection.setInput(1.0d)
+	    outputConnection.setError(1.0d)
+	    
+	    expect(2.0d) {
+	        perceptron(Map("1"->1))
+	    }
+	}
+	
+	
 	
 }
