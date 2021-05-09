@@ -18,4 +18,6 @@ sbt test
 
 This project is unfinished.
 
-Learning is now added (classic backpropagation), but it is not tested yet (other then unit tests, but those aren't really good for testing learning algorithms), so expect it not to work at the moment.
+Learning is now added (classic backpropagation).
+
+TODO: Add more tests for learning.

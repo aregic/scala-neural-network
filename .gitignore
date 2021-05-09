@@ -8,3 +8,5 @@ project/project/
 
 #ignoring temporary files created by gedit
 *~
+
+.idea/
